@@ -6,7 +6,6 @@
     android:name="dev.abgeo.movies.ui.movie.MovieCastFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.movie.MovieCastFragment"
     tools:listitem="@layout/movie_cast_item" />
