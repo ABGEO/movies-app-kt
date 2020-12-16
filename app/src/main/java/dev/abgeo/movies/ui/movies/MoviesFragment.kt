@@ -11,9 +11,14 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import dev.abgeo.movies.R
+import dev.abgeo.movies.model.Movie
 
-class MoviesFragment : Fragment() {
+class MoviesFragment : Fragment(), MovieRecyclerViewAdapter.CellClickListener {
+
+    private val movieViewModel: MovieViewModel by navGraphViewModels(R.id.nav_graph)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,27 +27,32 @@ class MoviesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
         val list = view.findViewById<RecyclerView>(R.id.rvMovies)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-        val viewModel = MovieViewModel()
 
-        viewModel.personLiveData.observe(this, {
+        movieViewModel.moviesLiveData.observe(viewLifecycleOwner, {
             with(list) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = MovieRecyclerViewAdapter(it, context)
+                adapter = MovieRecyclerViewAdapter(it, context, this@MoviesFragment)
             }
         })
 
-        viewModel.errorLiveData.observe(this, {
+        movieViewModel.errorLiveData.observe(viewLifecycleOwner, {
             Toast.makeText(context, it, Toast.LENGTH_SHORT)
                 .show()
         })
 
-        viewModel.loaderLiveData.observe(this, {
+        movieViewModel.loaderLiveData.observe(viewLifecycleOwner, {
             progressBar.visibility = if (it) VISIBLE else GONE
         })
 
-        viewModel.getMovies()
+        movieViewModel.getMovies()
 
         return view
+    }
+
+    override fun onCellClickListener(movie: Movie) {
+        movieViewModel.postMovie(movie)
+
+        findNavController().navigate(R.id.action_moviesFragment_to_movieFragment)
     }
 
 }

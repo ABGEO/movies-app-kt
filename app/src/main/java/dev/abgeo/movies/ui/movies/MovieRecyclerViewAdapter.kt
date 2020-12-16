@@ -13,7 +13,8 @@ import dev.abgeo.movies.model.Movie
 
 class MovieRecyclerViewAdapter(
     private val values: List<Movie>,
-    private val context: Context
+    private val context: Context,
+    private val cellClickListener: CellClickListener
 ) : RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -29,12 +30,20 @@ class MovieRecyclerViewAdapter(
         Glide.with(context)
             .load(item.imageUrl)
             .into(holder.ivBanner)
+
+        holder.ivBanner.setOnClickListener {
+            cellClickListener.onCellClickListener(item)
+        }
     }
 
     override fun getItemCount(): Int = values.size
 
     inner class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivBanner: ImageView = view.findViewById(R.id.ivBanner)
+    }
+
+    interface CellClickListener {
+        fun onCellClickListener(movie: Movie)
     }
 
 }

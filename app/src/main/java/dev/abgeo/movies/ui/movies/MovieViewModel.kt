@@ -15,8 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MovieViewModel : ViewModel() {
 
     private val _moviesLiveData = MutableLiveData<List<Movie>>()
-    val personLiveData: LiveData<List<Movie>>
+    val moviesLiveData: LiveData<List<Movie>>
         get() = _moviesLiveData
+
+    private val _movieLiveData = MutableLiveData<Movie>()
+    val movieLiveData: LiveData<Movie>
+        get() = _movieLiveData
 
     private val _loaderLiveData = MutableLiveData<Boolean>()
     val loaderLiveData: LiveData<Boolean>
@@ -60,6 +64,10 @@ class MovieViewModel : ViewModel() {
                 _errorLiveData.postValue("Network Error")
             }
         })
+    }
+
+    fun postMovie(movie: Movie) {
+        _movieLiveData.postValue(movie)
     }
 
 }
